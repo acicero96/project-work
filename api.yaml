@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Project Work API
+  version: 1.0.0
+paths:
+  /prenotazioni:
+    post:
+      summary: Crea una nuova prenotazione
+      tags:
+        - Prenotazione
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                servizio:
+                  type: string
+                data:
+                  type: string
+                  format: date
+              required:
+                - servizio
+                - data
+      responses:
+        "201":
+          description: Prenotazione creata
+        "400":
+          description: Richiesta non valida
+        "500":
+          description: Errore interno
+    get:
+      summary: Recupera le prenotazioni dell'utente autenticato
+      tags:
+        - Prenotazione
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Lista delle prenotazioni
+        "500":
+          description: Errore interno
+  /prenotazioni/{prenotazione_id}:
+    parameters:
+      - name: prenotazione_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Recupera una singola prenotazione
+      tags:
+        - Prenotazione
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Dettagli della prenotazione
+        "404":
+          description: Prenotazione non trovata
+        "500":
+          description: Errore interno
+    put:
+      summary: Modifica una prenotazione
+      tags:
+        - Prenotazione
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Prenotazione aggiornata
+        "404":
+          description: Prenotazione non trovata
+        "500":
+          description: Errore interno
+    delete:
+      summary: Elimina una prenotazione
+      tags:
+        - Prenotazione
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Prenotazione eliminata
+        "404":
+          description: Prenotazione non trovata
+        "500":
+          description: Errore interno
+  /prenotazioni/{nome_barca}:
+    get:
+      summary: Recupera le prenotazioni per una barca specifica
+      tags:
+        - Prenotazione
+      parameters:
+        - name: nome_barca
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lista delle prenotazioni
+        "500":
+          description: Errore interno
+  /register:
+    post:
+      summary: Registra un nuovo utente
+      tags:
+        - Utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - email
+                - password
+      responses:
+        "201":
+          description: Registrazione avvenuta con successo
+        "400":
+          description: Dati mancanti o errati
+        "500":
+          description: Errore interno
+  /login:
+    post:
+      summary: Effettua il login
+      tags:
+        - Utente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Login avvenuto con successo
+        "400":
+          description: Email o password mancanti
+        "401":
+          description: Credenziali errate
+        "500":
+          description: Errore interno
+  /user/{user_id}:
+    get:
+      summary: Recupera i dettagli di un utente
+      tags:
+        - Utente
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Dettagli utente
+        "404":
+          description: Utente non trovato
+        "500":
+          description: Errore interno
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
